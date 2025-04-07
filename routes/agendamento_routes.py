@@ -3,6 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app import db
 from models.fila_models import SlotAgendamento, Feedback
 from services.agendamento_service import AgendamentoService
+from services.troca_service import TrocaService  # Novo
 from datetime import datetime
 
 agendamento_bp = Blueprint('agendamento', __name__)
@@ -65,3 +66,33 @@ def dar_feedback_slot(slot_id):
     db.session.add(feedback)
     db.session.commit()
     return jsonify({"mensagem": "Feedback registrado"}), 201
+
+# Novas rotas para troca
+@agendamento_bp.route('/slot/<int:slot_id>/oferecer-troca', methods=['POST'])
+@jwt_required()
+def oferecer_troca_slot(slot_id):
+    identity = get_jwt_identity()
+    try:
+        slot = TrocaService.oferecer_troca_slot(slot_id, identity['id'])
+        return jsonify({"mensagem": f"Slot {slot.data_horario} oferecido para troca"}), 200
+    except ValueError as e:
+        return jsonify({"erro": str(e)}), 400
+
+@agendamento_bp.route('/servico/<int:servico_id>/trocas-disponiveis', methods=['GET'])
+@jwt_required()
+def listar_trocas_disponiveis_slots(servico_id):
+    trocas = TrocaService.listar_trocas_disponiveis_slots(servico_id)
+    return jsonify([{"id": t.id, "data_horario": t.data_horario.isoformat()} for t in trocas])
+
+@agendamento_bp.route('/slot/<int:slot_origem_id>/trocar/<int:slot_destino_id>', methods=['POST'])
+@jwt_required()
+def trocar_slot(slot_origem_id, slot_destino_id):
+    identity = get_jwt_identity()
+    try:
+        resultado = TrocaService.trocar_slot(slot_origem_id, slot_destino_id, identity['id'])
+        return jsonify({"mensagem": "Troca realizada com sucesso", "detalhes": {
+            "slot_origem": {"data_horario": resultado["slot_origem"].data_horario.isoformat()},
+            "slot_destino": {"data_horario": resultado["slot_destino"].data_horario.isoformat()}
+        }}), 200
+    except ValueError as e:
+        return jsonify({"erro": str(e)}), 400

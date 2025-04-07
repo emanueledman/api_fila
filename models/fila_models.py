@@ -6,7 +6,7 @@ class Usuario(db.Model):
     nome = db.Column(db.String(80), nullable=False)
     telefone = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    tipo = db.Column(db.String(20), default="normal")  # normal, prioritario
+    tipo = db.Column(db.String(20), default="normal")
     token_app = db.Column(db.String(255))
     senha = db.Column(db.String(120))
 
@@ -37,15 +37,17 @@ class Fila(db.Model):
     horario_estimado = db.Column(db.DateTime)
     posicao = db.Column(db.Integer, nullable=False)
     ultima_notificacao = db.Column(db.DateTime)
+    troca_disponivel = db.Column(db.Boolean, default=False)  # Novo: Indica se a vaga está disponível para troca
 
 class SlotAgendamento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_servico = db.Column(db.Integer, db.ForeignKey('servico.id'), nullable=False)
-    data_horario = db.Column(db.DateTime, nullable=False)  # Data e hora do slot
-    capacidade_maxima = db.Column(db.Integer, nullable=False)  # Nº de pacientes por slot
-    capacidade_atual = db.Column(db.Integer, default=0)  # Nº atual de agendamentos
-    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))  # Quem agendou (null se slot aberto)
-    status = db.Column(db.String(20), default="aberto")  # aberto, reservado, concluido
+    data_horario = db.Column(db.DateTime, nullable=False)
+    capacidade_maxima = db.Column(db.Integer, nullable=False)
+    capacidade_atual = db.Column(db.Integer, default=0)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
+    status = db.Column(db.String(20), default="aberto")
+    troca_disponivel = db.Column(db.Boolean, default=False)  # Novo: Indica se o slot está disponível para troca
 
 class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
