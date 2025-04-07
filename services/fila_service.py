@@ -1,4 +1,6 @@
-from app import db
+# services/fila_service.py
+from extensions import db
+# resto do código
 from models.fila_models import Fila, Servico, Usuario
 from datetime import datetime, timedelta
 import requests
