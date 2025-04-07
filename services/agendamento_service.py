@@ -1,4 +1,4 @@
-from app import db
+from extensions import db
 from models.fila_models import SlotAgendamento, Servico, Usuario
 from datetime import datetime
 import requests

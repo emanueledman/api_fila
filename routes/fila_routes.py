@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app import db
+from extensions import db
 from models.fila_models import Fila, Feedback
 from services.fila_service import FilaService
 from services.troca_service import TrocaService

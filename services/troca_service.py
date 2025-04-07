@@ -1,4 +1,4 @@
-from app import db
+from extensions import db
 from models.fila_models import Fila, SlotAgendamento, Usuario
 from services.fila_service import FilaService
 from services.agendamento_service import AgendamentoService
