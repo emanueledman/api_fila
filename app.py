@@ -37,6 +37,9 @@ def create_app():
 
     return app
 
+# Cria a instância da aplicação
+app = create_app()
+
+# Ponto de entrada para execução local
 if __name__ == '__main__':
-    app = create_app()
     socketio.run(app, debug=True, host='0.0.0.0', port=5000)
