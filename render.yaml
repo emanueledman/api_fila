@@ -2,18 +2,14 @@ services:
   - type: web
     name: fila-api
     runtime: python
-    buildCommand: |
-      pip install -r requirements.txt
-      python -m pip install --upgrade pip
+    buildCommand: pip install -r requirements.txt
     startCommand: gunicorn --worker-class eventlet -w 1 app:create_app()
     envVars:
       - key: PORT
-        value: 10000  # Render's default port
-      - key: SECRET_KEY
-        generateValue: true  # Auto-generate secure key
-      - key: JWT_SECRET_KEY
-        generateValue: true
-      - key: DATABASE_URL
-        value: postgresql://user:pass@localhost:5432/dbname  # Replace with Render PostgreSQL add-on
+        value: 10000
       - key: FLASK_ENV
         value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
